@@ -270,7 +270,7 @@ type RemoteProvider interface {
 var SupportedExts = []string{"json", "toml", "yaml", "yml", "properties", "props", "prop", "hcl"}
 
 // SupportedRemoteProviders are universally supported remote providers.
-var SupportedRemoteProviders = []string{"etcd", "consul"}
+var SupportedRemoteProviders = []string{"etcd", "etcdv3", "consul"}
 
 func OnConfigChange(run func(in fsnotify.Event)) { v.OnConfigChange(run) }
 func (v *Viper) OnConfigChange(run func(in fsnotify.Event)) {
@@ -1580,6 +1580,10 @@ func (v *Viper) WatchRemoteConfigOnChannel() error {
 	return v.watchKeyValueConfigOnChannel()
 }
 
+func (v *Viper) WatchRemoteConfigOnChannelNotify(c chan *RemoteResponse) error {
+	return v.watchKeyValueConfigOnChannelNotify(c)
+}
+
 func (v *Viper) insensitiviseMaps() {
 	insensitiviseMap(v.config)
 	insensitiviseMap(v.defaults)
@@ -1612,6 +1616,25 @@ func (v *Viper) getRemoteConfig(provider RemoteProvider) (map[string]interface{}
 	err = v.unmarshalReader(reader, v.kvstore)
 	return v.kvstore, err
 }
+
+// Retrieve the first found remote configuration.
+func (v *Viper) watchKeyValueConfigOnChannelNotify(c chan *RemoteResponse) error {
+	for _, rp := range v.remoteProviders {
+		respc, _ := RemoteConfig.WatchChannel(rp)
+		//Todo: Add quit channel
+		go func(rc <-chan *RemoteResponse) {
+			for {
+				b := <-rc
+				reader := bytes.NewReader(b.Value)
+				v.unmarshalReader(reader, v.kvstore)
+				c <- b
+			}
+		}(respc)
+		return nil
+	}
+	return RemoteConfigError("No Files Found")
+}
+
 
 // Retrieve the first found remote configuration.
 func (v *Viper) watchKeyValueConfigOnChannel() error {

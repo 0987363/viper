@@ -13,8 +13,8 @@ import (
 
 	"strings"
 
-	"github.com/spf13/viper"
-	crypt "github.com/xordataexchange/crypt/config"
+	"github.com/0987363/viper"
+	crypt "github.com/0987363/crypt/config"
 )
 
 type remoteConfigProvider struct{}
@@ -84,15 +84,21 @@ func getConfigManager(rp viper.RemoteProvider) (crypt.ConfigManager, error) {
 		if err != nil {
 			return nil, err
 		}
-		if rp.Provider() == "etcd" {
+		switch rp.Provider() {
+		case "etcdv3":
+			cm, err = crypt.NewEtcdv3ConfigManager(toMachines(rp.Endpoint()), kr)
+		case "etcd":
 			cm, err = crypt.NewEtcdConfigManager(toMachines(rp.Endpoint()), kr)
-		} else {
+		default:
 			cm, err = crypt.NewConsulConfigManager(toMachines(rp.Endpoint()), kr)
 		}
 	} else {
-		if rp.Provider() == "etcd" {
+		switch rp.Provider() {
+		case "etcdv3":
+			cm, err = crypt.NewStandardEtcdv3ConfigManager(toMachines(rp.Endpoint()))
+		case "etcd":
 			cm, err = crypt.NewStandardEtcdConfigManager(toMachines(rp.Endpoint()))
-		} else {
+		default:
 			cm, err = crypt.NewStandardConsulConfigManager(toMachines(rp.Endpoint()))
 		}
 	}
