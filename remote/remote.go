@@ -86,20 +86,20 @@ func getConfigManager(rp viper.RemoteProvider) (crypt.ConfigManager, error) {
 		}
 		switch rp.Provider() {
 		case "etcdv3":
-			cm, err = crypt.NewEtcdv3ConfigManager(toMachines(rp.Endpoint()), kr)
+			return crypt.NewEtcdv3ConfigManager(toMachines(rp.Endpoint()), kr)
 		case "etcd":
-			cm, err = crypt.NewEtcdConfigManager(toMachines(rp.Endpoint()), kr)
+			return crypt.NewEtcdConfigManager(toMachines(rp.Endpoint()), kr)
 		default:
-			cm, err = crypt.NewConsulConfigManager(toMachines(rp.Endpoint()), kr)
+			return crypt.NewConsulConfigManager(toMachines(rp.Endpoint()), kr)
 		}
 	} else {
 		switch rp.Provider() {
 		case "etcdv3":
-			cm, err = crypt.NewStandardEtcdv3ConfigManager(toMachines(rp.Endpoint()))
+			return crypt.NewStandardEtcdv3ConfigManager(toMachines(rp.Endpoint()))
 		case "etcd":
-			cm, err = crypt.NewStandardEtcdConfigManager(toMachines(rp.Endpoint()))
+			return crypt.NewStandardEtcdConfigManager(toMachines(rp.Endpoint()))
 		default:
-			cm, err = crypt.NewStandardConsulConfigManager(toMachines(rp.Endpoint()))
+			return crypt.NewStandardConsulConfigManager(toMachines(rp.Endpoint()))
 		}
 	}
 	if err != nil {
