@@ -1,4 +1,6 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
+github.com/0987363/crypt v0.0.0-20190306032048-499e2706b4af h1:CWDsexKkttbrSlX0HO23NkiPn0ZHmsr5BtlgHYLXjKw=
+github.com/0987363/crypt v0.0.0-20190306032048-499e2706b4af/go.mod h1:1LEJMsp8ALPGISTv9Y02xOk9Xsp5TRm+sjlEyNFuqOI=
 github.com/0987363/crypt v2.0.1+incompatible h1:fJK1Hr7UZ2r1ZXHqg3RGTyQ+iS9x3xLrDLROmtf5RE8=
 github.com/0987363/crypt v2.0.1+incompatible/go.mod h1:Py2Dji3nwOzRz9RCsjK0icJ0gBpcYMm8vLVqkHKYz7E=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
