@@ -75,9 +75,6 @@ func (rc remoteConfigProvider) WatchChannel(rp viper.RemoteProvider) (<-chan *vi
 }
 
 func getConfigManager(rp viper.RemoteProvider) (crypt.ConfigManager, error) {
-	var cm crypt.ConfigManager
-	var err error
-
 	if rp.SecretKeyring() != "" {
 		kr, err := os.Open(rp.SecretKeyring())
 		defer kr.Close()
@@ -102,10 +99,6 @@ func getConfigManager(rp viper.RemoteProvider) (crypt.ConfigManager, error) {
 			return crypt.NewStandardConsulConfigManager(toMachines(rp.Endpoint()))
 		}
 	}
-	if err != nil {
-		return nil, err
-	}
-	return cm, nil
 }
 
 func toMachines(endpoint string) []string {
